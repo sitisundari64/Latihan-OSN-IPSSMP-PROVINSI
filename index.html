@@ -1,0 +1,1046 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --primary: #c85a1e;
+    --primary-dark: #a04416;
+    --secondary: #f4a623;
+    --bg: #fdf6ee;
+    --card: #ffffff;
+    --text: #2c1a0e;
+    --muted: #7a5c44;
+    --border: #e8d5c0;
+    --correct: #2e7d32;
+    --wrong: #c62828;
+    --correct-bg: #e8f5e9;
+    --wrong-bg: #ffebee;
+    --shadow: 0 4px 24px rgba(200,90,30,0.10);
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Nunito', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+  .header {
+    background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+    color: white;
+    padding: 18px 32px;
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    box-shadow: 0 4px 20px rgba(200,90,30,0.3);
+  }
+  .header-icon {
+    width: 52px; height: 52px;
+    background: var(--secondary);
+    border-radius: 14px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 28px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  }
+  .header-text h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.4rem;
+    font-weight: 900;
+    letter-spacing: 0.5px;
+  }
+  .header-text p { font-size: 0.82rem; opacity: 0.85; margin-top: 2px; }
+  .main { flex: 1; padding: 32px 16px 16px; max-width: 860px; width: 100%; margin: 0 auto; }
+
+  /* SCREEN: IDENTITY */
+  .identity-card {
+    background: var(--card);
+    border-radius: 24px;
+    box-shadow: var(--shadow);
+    padding: 48px 40px;
+    text-align: center;
+    border: 1.5px solid var(--border);
+    animation: fadeUp 0.5s ease;
+  }
+  .identity-card h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: 2rem;
+    color: var(--primary);
+    margin-bottom: 8px;
+  }
+  .identity-card p { color: var(--muted); margin-bottom: 32px; font-size: 0.95rem; }
+  .form-group { margin-bottom: 20px; text-align: left; }
+  .form-group label {
+    display: block;
+    font-weight: 700;
+    color: var(--primary-dark);
+    margin-bottom: 8px;
+    font-size: 0.9rem;
+    letter-spacing: 0.3px;
+  }
+  .form-group input, .form-group select {
+    width: 100%;
+    padding: 13px 18px;
+    border: 2px solid var(--border);
+    border-radius: 12px;
+    font-family: 'Nunito', sans-serif;
+    font-size: 1rem;
+    color: var(--text);
+    background: var(--bg);
+    outline: none;
+    transition: border 0.2s;
+  }
+  .form-group input:focus, .form-group select:focus { border-color: var(--primary); }
+  .btn-start {
+    background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+    color: white;
+    border: none;
+    border-radius: 14px;
+    padding: 15px 40px;
+    font-family: 'Nunito', sans-serif;
+    font-size: 1.05rem;
+    font-weight: 800;
+    cursor: pointer;
+    width: 100%;
+    margin-top: 8px;
+    letter-spacing: 0.5px;
+    transition: transform 0.15s, box-shadow 0.15s;
+    box-shadow: 0 6px 20px rgba(200,90,30,0.35);
+  }
+  .btn-start:hover { transform: translateY(-2px); box-shadow: 0 10px 28px rgba(200,90,30,0.45); }
+  .info-row {
+    display: flex; gap: 12px; margin-bottom: 28px; flex-wrap: wrap;
+  }
+  .info-chip {
+    background: #fff4ec;
+    border: 1.5px solid var(--secondary);
+    border-radius: 50px;
+    padding: 7px 16px;
+    font-size: 0.82rem;
+    font-weight: 700;
+    color: var(--primary-dark);
+    display: flex; align-items: center; gap: 6px;
+  }
+
+  /* SCREEN: QUIZ */
+  .quiz-topbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 22px;
+    gap: 14px;
+    flex-wrap: wrap;
+  }
+  .student-info {
+    font-weight: 700;
+    color: var(--primary);
+    font-size: 0.9rem;
+  }
+  .timer-box {
+    background: var(--primary);
+    color: white;
+    border-radius: 12px;
+    padding: 8px 20px;
+    font-size: 1.1rem;
+    font-weight: 800;
+    font-variant-numeric: tabular-nums;
+    letter-spacing: 2px;
+    box-shadow: 0 4px 14px rgba(200,90,30,0.3);
+    display: flex; align-items: center; gap: 8px;
+  }
+  .timer-box.warning { background: #c62828; animation: pulse 1s infinite; }
+  @keyframes pulse { 0%,100%{transform:scale(1)} 50%{transform:scale(1.04)} }
+  .progress-bar-wrap {
+    width: 100%;
+    height: 7px;
+    background: var(--border);
+    border-radius: 10px;
+    overflow: hidden;
+    margin-bottom: 22px;
+  }
+  .progress-bar-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--secondary), var(--primary));
+    border-radius: 10px;
+    transition: width 0.4s;
+  }
+  .question-card {
+    background: var(--card);
+    border-radius: 22px;
+    box-shadow: var(--shadow);
+    padding: 32px 32px 28px;
+    border: 1.5px solid var(--border);
+    margin-bottom: 18px;
+    animation: fadeUp 0.4s ease;
+  }
+  .q-meta {
+    display: flex; align-items: center; gap: 10px; margin-bottom: 14px;
+  }
+  .q-num {
+    background: var(--primary);
+    color: white;
+    border-radius: 8px;
+    padding: 3px 12px;
+    font-size: 0.8rem;
+    font-weight: 800;
+    letter-spacing: 0.5px;
+  }
+  .q-section {
+    font-size: 0.78rem;
+    color: var(--muted);
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+  .q-text {
+    font-size: 0.97rem;
+    line-height: 1.7;
+    color: var(--text);
+    margin-bottom: 18px;
+  }
+  .q-image {
+    width: 100%; max-width: 380px;
+    border-radius: 12px;
+    margin: 12px 0 18px;
+    border: 1.5px solid var(--border);
+    display: block;
+  }
+  .stimulus-table {
+    width: 100%; border-collapse: collapse;
+    margin: 12px 0 18px;
+    font-size: 0.88rem;
+  }
+  .stimulus-table th, .stimulus-table td {
+    border: 1.5px solid var(--border);
+    padding: 8px 12px;
+    text-align: left;
+  }
+  .stimulus-table th {
+    background: #fff4ec;
+    font-weight: 800;
+    color: var(--primary-dark);
+  }
+  .options { display: flex; flex-direction: column; gap: 10px; }
+  .option-btn {
+    background: var(--bg);
+    border: 2px solid var(--border);
+    border-radius: 12px;
+    padding: 12px 18px;
+    text-align: left;
+    cursor: pointer;
+    font-family: 'Nunito', sans-serif;
+    font-size: 0.93rem;
+    color: var(--text);
+    transition: all 0.18s;
+    display: flex; align-items: center; gap: 12px;
+    font-weight: 600;
+  }
+  .option-btn:hover:not(:disabled) { border-color: var(--primary); background: #fff4ec; }
+  .option-btn.selected { border-color: var(--secondary); background: #fff8ef; }
+  .option-btn.correct { border-color: var(--correct); background: var(--correct-bg); color: var(--correct); }
+  .option-btn.wrong { border-color: var(--wrong); background: var(--wrong-bg); color: var(--wrong); }
+  .option-btn:disabled { cursor: default; }
+  .opt-letter {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 28px; height: 28px;
+    border-radius: 8px;
+    background: var(--border);
+    color: var(--primary-dark);
+    font-weight: 800;
+    font-size: 0.85rem;
+    flex-shrink: 0;
+    transition: background 0.18s;
+  }
+  .option-btn.selected .opt-letter { background: var(--secondary); color: white; }
+  .option-btn.correct .opt-letter { background: var(--correct); color: white; }
+  .option-btn.wrong .opt-letter { background: var(--wrong); color: white; }
+  .nav-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 10px;
+    gap: 10px;
+  }
+  .btn-nav {
+    border: 2px solid var(--border);
+    background: var(--card);
+    border-radius: 11px;
+    padding: 10px 24px;
+    font-family: 'Nunito', sans-serif;
+    font-size: 0.92rem;
+    font-weight: 700;
+    color: var(--primary);
+    cursor: pointer;
+    transition: all 0.18s;
+  }
+  .btn-nav:hover { border-color: var(--primary); background: #fff4ec; }
+  .btn-nav.primary {
+    background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+    color: white;
+    border-color: transparent;
+    box-shadow: 0 4px 14px rgba(200,90,30,0.28);
+  }
+  .btn-nav.primary:hover { opacity: 0.9; }
+  .q-counter { font-size: 0.88rem; color: var(--muted); font-weight: 700; }
+  .q-palette {
+    display: flex; flex-wrap: wrap; gap: 7px;
+    background: var(--card);
+    border-radius: 18px;
+    padding: 18px 20px;
+    border: 1.5px solid var(--border);
+    margin-bottom: 20px;
+    box-shadow: var(--shadow);
+  }
+  .palette-btn {
+    width: 34px; height: 34px;
+    border-radius: 8px;
+    border: 2px solid var(--border);
+    background: var(--bg);
+    font-weight: 800;
+    font-size: 0.78rem;
+    cursor: pointer;
+    color: var(--muted);
+    transition: all 0.15s;
+  }
+  .palette-btn.answered { background: var(--secondary); border-color: var(--secondary); color: white; }
+  .palette-btn.current { border-color: var(--primary); color: var(--primary); }
+  .palette-label { width: 100%; font-size: 0.78rem; font-weight: 700; color: var(--muted); margin-bottom: 4px; }
+
+  /* SCREEN: RESULT */
+  .result-card {
+    background: var(--card);
+    border-radius: 24px;
+    box-shadow: var(--shadow);
+    padding: 44px 36px;
+    text-align: center;
+    border: 1.5px solid var(--border);
+    animation: fadeUp 0.5s ease;
+  }
+  .score-ring {
+    width: 140px; height: 140px;
+    border-radius: 50%;
+    background: conic-gradient(var(--primary) var(--pct, 0%), var(--border) 0%);
+    display: flex; align-items: center; justify-content: center;
+    margin: 0 auto 22px;
+    position: relative;
+  }
+  .score-inner {
+    width: 110px; height: 110px;
+    border-radius: 50%;
+    background: white;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+  }
+  .score-num { font-family: 'Playfair Display', serif; font-size: 2.2rem; font-weight: 900; color: var(--primary); }
+  .score-label { font-size: 0.7rem; color: var(--muted); font-weight: 700; }
+  .result-card h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.8rem;
+    color: var(--primary);
+    margin-bottom: 8px;
+  }
+  .feedback-box {
+    background: linear-gradient(135deg, #fff4ec, #fff8ef);
+    border: 2px solid var(--secondary);
+    border-radius: 16px;
+    padding: 18px 22px;
+    margin: 20px 0;
+    font-size: 0.95rem;
+    line-height: 1.6;
+    color: var(--text);
+    font-weight: 600;
+  }
+  .stats-row { display: flex; justify-content: center; gap: 22px; margin: 20px 0; flex-wrap: wrap; }
+  .stat-chip {
+    display: flex; flex-direction: column; align-items: center;
+    background: var(--bg);
+    border: 1.5px solid var(--border);
+    border-radius: 14px;
+    padding: 12px 22px;
+    min-width: 90px;
+  }
+  .stat-num { font-family: 'Playfair Display', serif; font-size: 1.6rem; font-weight: 900; }
+  .stat-num.c { color: var(--correct); }
+  .stat-num.w { color: var(--wrong); }
+  .stat-num.n { color: var(--muted); }
+  .stat-lbl { font-size: 0.75rem; color: var(--muted); font-weight: 700; margin-top: 2px; }
+  .btn-restart {
+    background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+    color: white;
+    border: none;
+    border-radius: 14px;
+    padding: 14px 40px;
+    font-family: 'Nunito', sans-serif;
+    font-size: 1rem;
+    font-weight: 800;
+    cursor: pointer;
+    margin-top: 10px;
+    box-shadow: 0 6px 20px rgba(200,90,30,0.3);
+    transition: transform 0.15s;
+  }
+  .btn-restart:hover { transform: translateY(-2px); }
+  .review-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.2rem;
+    color: var(--primary-dark);
+    margin: 28px 0 14px;
+    text-align: left;
+  }
+  .review-item {
+    background: var(--bg);
+    border: 1.5px solid var(--border);
+    border-radius: 14px;
+    padding: 14px 18px;
+    margin-bottom: 10px;
+    text-align: left;
+    font-size: 0.88rem;
+  }
+  .review-item.rc { border-left: 4px solid var(--correct); }
+  .review-item.rw { border-left: 4px solid var(--wrong); }
+  .review-item.rn { border-left: 4px solid var(--muted); }
+  .review-item strong { color: var(--primary); }
+  .r-badge {
+    display: inline-block;
+    border-radius: 6px;
+    padding: 2px 8px;
+    font-size: 0.75rem;
+    font-weight: 800;
+    margin-left: 6px;
+  }
+  .r-badge.c { background: var(--correct-bg); color: var(--correct); }
+  .r-badge.w { background: var(--wrong-bg); color: var(--wrong); }
+  .r-badge.n { background: #f5f5f5; color: var(--muted); }
+  footer {
+    text-align: center;
+    padding: 18px;
+    font-size: 0.78rem;
+    color: var(--muted);
+    border-top: 1.5px solid var(--border);
+    background: white;
+    margin-top: auto;
+  }
+  footer strong { color: var(--primary-dark); }
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(18px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .hidden { display: none !important; }
+  .section-tag {
+    display: inline-block;
+    background: #fff4ec;
+    color: var(--primary);
+    border-radius: 6px;
+    padding: 2px 8px;
+    font-size: 0.72rem;
+    font-weight: 800;
+    margin-bottom: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-icon">📚</div>
+  <div class="header-text">
+    <h1>CBT OSN IPS SMP Tingkat Provinsi</h1>
+    <p>Olimpiade Sains Nasional · Kumpulan Soal Pilihan Ganda & Isian Singkat</p>
+  </div>
+</div>
+
+<div class="main">
+
+  <div id="screen-identity">
+    <div class="identity-card">
+      <h2>Selamat Datang!</h2>
+      <p>Silakan lengkapi data diri sebelum memulai ujian</p>
+      <div class="info-row" style="justify-content:center;">
+        <div class="info-chip">⏱️ 60 Menit</div>
+        <div class="info-chip">📝 40 Soal</div>
+        <div class="info-chip">🏆 OSN Provinsi IPS</div>
+      </div>
+      <div class="form-group">
+        <label>Nama Lengkap</label>
+        <input type="text" id="inp-name" placeholder="Masukkan nama lengkap..." />
+      </div>
+      <div class="form-group">
+        <label>Kelas</label>
+        <select id="inp-class">
+          <option value="">-- Pilih Kelas --</option>
+          <option value="7">Kelas 7</option>
+          <option value="8">Kelas 8</option>
+          <option value="9">Kelas 9</option>
+        </select>
+      </div>
+      <button class="btn-start" onclick="startQuiz()">Mulai Ujian →</button>
+    </div>
+  </div>
+
+  <div id="screen-quiz" class="hidden">
+    <div class="quiz-topbar">
+      <div class="student-info" id="student-label"></div>
+      <div class="timer-box" id="timer-box">⏱ <span id="timer-display">60:00</span></div>
+    </div>
+    <div class="progress-bar-wrap"><div class="progress-bar-fill" id="progress-bar"></div></div>
+    <div class="q-palette" id="q-palette">
+      <div class="palette-label">Navigasi Soal (● = terjawab)</div>
+    </div>
+    <div class="question-card" id="question-card"></div>
+    <div class="nav-row">
+      <button class="btn-nav" onclick="prevQ()">← Sebelumnya</button>
+      <span class="q-counter" id="q-counter"></span>
+      <button class="btn-nav primary" id="btn-next" onclick="nextOrSubmit()">Selanjutnya →</button>
+    </div>
+  </div>
+
+  <div id="screen-result" class="hidden">
+    <div class="result-card">
+      <div class="score-ring" id="score-ring">
+        <div class="score-inner">
+          <div class="score-num" id="score-num">0</div>
+          <div class="score-label">Nilai</div>
+        </div>
+      </div>
+      <h2 id="result-name"></h2>
+      <p style="color:var(--muted);font-size:0.88rem;" id="result-meta"></p>
+      <div class="feedback-box" id="feedback-box"></div>
+      <div class="stats-row">
+        <div class="stat-chip"><div class="stat-num c" id="res-correct">0</div><div class="stat-lbl">✅ Benar</div></div>
+        <div class="stat-chip"><div class="stat-num w" id="res-wrong">0</div><div class="stat-lbl">❌ Salah</div></div>
+        <div class="stat-chip"><div class="stat-num n" id="res-skip">0</div><div class="stat-lbl">⭕ Belum Dijawab</div></div>
+      </div>
+      <button class="btn-restart" onclick="restartQuiz()">Ulangi Ujian</button>
+      <div class="review-title">📋 Pembahasan Jawaban</div>
+      <div id="review-list"></div>
+    </div>
+  </div>
+
+</div>
+
+<footer>
+  &copy; 2026 <strong>Siti Sundari, M.Pd.</strong> &mdash; Kepala SMPN 2 Ganeas &nbsp;|&nbsp; CBT OSN IPS SMP Tingkat Provinsi
+</footer>
+
+<script>
+const DURATION = 60 * 60; // 60 minutes in seconds
+
+const QUESTIONS = [
+  // PILIHAN GANDA
+  {
+    id: 1, type: "pg", section: "Geografi",
+    question: "Indonesia memiliki Zona Ekonomi Ekslusif (ZEE) sepanjang 200 mil dari garis pangkal teritorial. Di dalam wilayah ini, Indonesia memiliki hak khusus untuk mengelola sumber daya laut. Berdasarkan informasi tersebut, hak yang dimiliki oleh Indonesia di wilayah ZEE adalah ...",
+    options: ["Memperluas wilayah daratan","Mengekspolarasi pemanfaatan laut","Memiliki hak penuh atas kapal asing","Mengatur batas laut internasional"],
+    answer: 1
+  },
+  {
+    id: 2, type: "pg", section: "Geografi",
+    question: "Perhatikan pembentukan provinsi di Indonesia berikut!<br>(1) Tahun 1945 Indonesia terdiri atas delapan provinsi<br>(2) Provinsi Banten hasil pemekaran dari Provinsi Jawa Barat<br>(3) Provinsi Sulawesi Barat hasil pemekaran dari Provinsi Sulawesi Selatan<br>(4) Daerah Istimewa Yogyakarta resmi menjadi Provinsi di Indonesia<br>(5) Provinsi Kalimantan Utara hasil pemekaran dari Kalimantan Timur<br><br>Berdasarkan pernyataan di atas, urutkan pembentukan provinsi baru yang tepat adalah ...",
+    options: [
+      "Daerah Istimewa Yogyakarta, Banten, Sulawesi Barat, Kalimantan Utara",
+      "Banten, Sulawesi Barat, Daerah Istimewa Yogyakarta, Kalimantan Utara",
+      "Kalimantan Utara, Daerah Istimewa Yogyakarta, Banten, Sulawesi Barat",
+      "Sulawesi Barat, Banten, Kalimantan Utara, Daerah Istimewa Yogyakarta"
+    ],
+    answer: 1
+  },
+  {
+    id: 3, type: "pg", section: "Geografi",
+    question: "Perhatikan peta di bawah ini! Tanda X pada peta di atas merupakan negara ...",
+    image: "https://upload.wikimedia.org/wikipedia/commons/thumb/6/66/Malaysia_on_the_globe_%28special_marker%29.svg/400px-Malaysia_on_the_globe_%28special_marker%29.svg.png",
+    imageCaption: "Sumber: rebanas.com, 2025 — Peta kawasan Asia Tenggara (Tanda X menunjuk wilayah di sebelah barat laut Singapura / Semenanjung Malaya)",
+    options: ["Thailand","Vietnam","Malaysia","Tiongkok"],
+    answer: 2
+  },
+  {
+    id: 4, type: "pg", section: "Geografi",
+    question: "Perhatikan tabel berikut ini!<br><table class='stimulus-table'><tr><th>No</th><th>Pernyataan</th></tr><tr><td>1</td><td>Daerah tersebut memiliki banyak sawah irigasi</td></tr><tr><td>2</td><td>Permukiman penduduk padat</td></tr><tr><td>3</td><td>Daerah tersebut cocok untuk budidaya tanaman sayuran</td></tr><tr><td>4</td><td>Memiliki suhu dingin dan udara sejuk</td></tr></table>Urutan benar (B) dan salah (S) berdasarkan tabel di atas mengenai kenampakan alam dataran tinggi adalah ...",
+    options: ["B-B-S-B","C. B-S-B-B","D. S-S-B-B","E. S-B-B-S"],
+    answer: 2
+  },
+  {
+    id: 5, type: "pg", section: "Geografi",
+    question: "Jika skala pada peta yakni 1:2.000.000 dan jarak dua kota pada peta adalah 3 cm maka jarak sebenarnya dua kota tersebut adalah ...",
+    options: ["60 km","6 km","600 km","6.000 km"],
+    answer: 0
+  },
+  {
+    id: 6, type: "pg", section: "Geografi",
+    question: "Perhatikan pernyataan berikut!<br>(1) Garis Wallace membagi wilayah fauna Asiatis dan wilayah peralihan<br>(2) Garis Weber membatasi wilayah fauna Australia dengan wilayah peralihan<br>(3) Wilayah fauna asli Indonesia berada diantara garis Wallace dan Weber<br>(4) Pulau Kalimantan dan Sumatra memiliki hewan khas yang juga ditemukan di Asia<br>(5) Garis Wallace dan Weber merupakan batas wilayah endemik fauna di Indonesia<br><br>Pernyataan yang paling tepat tentang faktor-faktor yang menunjukkan adanya perbedaan persebaran fauna di Indonesia adalah ...",
+    options: ["(1), (2), dan (3)","(1), (2), dan (4)","(1), (3), dan (4)","(1), (4), dan (5)"],
+    answer: 1
+  },
+  {
+    id: 7, type: "pg", section: "Geografi",
+    question: "Pengaruh kondisi geostrategis wilayah Indonesia adalah ...",
+    options: [
+      "Indonesia berada di antara Samudra Hindia dan Samudra Atlantik yang mempercepat pengiriman barang",
+      "Indonesia menjadi tempat bertemunya berbagai jalur perdagangan dari Asia ke Australia",
+      "Letak strategis Indonesia menyebabkan timbulnya pergolakan budaya dari India dan Arab",
+      "Posisi Indonesia membuat masyarakatnya hidup homogen dan tidak banyak budaya luar"
+    ],
+    answer: 1
+  },
+  {
+    id: 8, type: "pg", section: "Sumber Daya Alam",
+    question: "Perhatikan gambar satwa endemik Indonesia yang hidup di hutan tropis di bawah ini! Pernyataan yang paling tepat tentang penyebab utama semakin menurunnya populasi satwa tersebut di Indonesia adalah ...",
+    image: "https://upload.wikimedia.org/wikipedia/commons/thumb/0/05/Buceros_rhinoceros_-_Jurong_Bird_Park.jpg/400px-Buceros_rhinoceros_-_Jurong_Bird_Park.jpg",
+    imageCaption: "Sumber: indozone.id — Rangkong/Enggang, satwa endemik Indonesia",
+    options: [
+      "(1), (2), dan (3) — Perdagangan ilegal satwa liar, alih fungsi hutan, keberadaan taman nasional terbatas",
+      "(1), (2), dan (4) — Perdagangan ilegal, alih fungsi hutan, perburuan untuk dipelihara",
+      "(1), (3), dan (5) — Perdagangan ilegal, taman nasional terbatas, reboisasi diperluas",
+      "(2), (4), dan (5) — Alih fungsi hutan, perburuan, reboisasi"
+    ],
+    answer: 1
+  },
+  {
+    id: 9, type: "pg", section: "Sumber Daya Alam",
+    question: "Perilaku yang menunjukkan pemanfaatan keanekaragaman hayati bagi kehidupan manusia adalah ...",
+    options: [
+      "Perburuan satwa liar menjadi cara cepat memperoleh keuntungan ekonomi",
+      "Berbagai jenis tanaman hutan dapat dijadikan bahan obat dan pangan",
+      "Eksploitasi dilakukan secukupnya agar semua keanekaragaman cepat dimanfaatkan",
+      "Tumbuhan dan hewan daerah menjadi daya tarik wisata komersil"
+    ],
+    answer: 1
+  },
+  {
+    id: 10, type: "pg", section: "Sumber Daya Alam",
+    question: "Perhatikan pernyataan berikut!<br>(1) Kayu, ikan, dan kapas termasuk sumber daya alam hayati karena berasal dari makhluk hidup dan dapat diperbarui<br>(2) Emas, batu bara, dan minyak bumi termasuk sumber daya alam non-hayati karena berasal dari benda mati dan tidak dapat diperbarui<br>(3) Udara dan sinar matahari termasuk sumber daya non-hayati dan tidak terbatas jumlahnya<br>(4) Karet, kelapa, dan sayuran termasuk sumber daya non-hayati karena dapat dimakan atau dimanfaatkan<br>(5) Air, garam, dan pasir termasuk sumber daya alam non-hayati yang berguna dalam kehidupan manusia<br><br>Pilihan kombinasi pernyataan yang tepat adalah ...",
+    options: ["(1), (2), dan (4)","(2), (3), dan (4)","(1), (2), dan (3)","(2), (4), dan (5)"],
+    answer: 2
+  },
+  {
+    id: 11, type: "pg", section: "Sosial Budaya",
+    question: "Perhatikan tabel berikut:<br><table class='stimulus-table'><tr><th>No</th><th>Pernyataan</th></tr><tr><td>1</td><td>Menyela dan memotong pembicaraan orang lain</td></tr><tr><td>2</td><td>Mempersilakan tempat duduk untuk lansia dan ibu hamil</td></tr><tr><td>3</td><td>Tidak makan dan minum sambil berdiri</td></tr><tr><td>4</td><td>Menunjuk dengan menggunakan tangan kiri dan kaki</td></tr></table>Urutan benar (B) dan salah (S) berdasarkan tabel di atas adalah ...",
+    options: ["B-B-S-B","B-S-B-B","S-S-B-B","S-B-B-S"],
+    answer: 3
+  },
+  {
+    id: 12, type: "pg", section: "Sosial Budaya",
+    question: "Berdasarkan pernyataan: <b>A:</b> Masyarakat Indonesia mempunyai kepercayaan dan agama yang beragam sehingga dalam melakukan interaksi harus saling menghormati perbedaan ajaran dan ibadah masing-masing agama. <b>B:</b> Menjaga kerukunan antar pemeluk agama dapat dilakukan dengan cara menghindari perkataan yang menyinggung atau merendahkan agama lain.<br><br>Hubungan dua pernyataan yang tepat adalah ...",
+    options: [
+      "Pernyataan A benar, Pernyataan B benar, dan ada hubungan",
+      "Pernyataan A benar, Pernyataan B benar, tetapi tidak ada hubungan",
+      "Pernyataan A benar, Pernyataan B salah",
+      "Pernyataan A salah, Pernyataan B benar"
+    ],
+    answer: 0
+  },
+  {
+    id: 13, type: "pg", section: "Sosial Budaya",
+    question: "Perhatikan gambar proses sosial berikut! (Siswa bergotong-royong membersihkan lingkungan sekolah bersama-sama)<br><br>(1) Memiliki tujuan bersama membersihkan lingkungan sekolah<br>(2) Persaingan siswa untuk mendapatkan juara kelas<br>(3) Berbagi tugas dalam menyelesaikan tugas bersama<br>(4) Semua siswa terlibat aktif membersihkan lingkungan<br>(5) Bentrokan di antara siswa di lingkungan sekolah<br><br>Pernyataan di atas yang paling tepat adalah ...",
+    options: ["(1), (2), dan (3)","(1), (3), dan (4)","(2), (4), dan (5)","(3), (4), dan (5)"],
+    answer: 1
+  },
+  {
+    id: 14, type: "pg", section: "Sosial Budaya",
+    question: "Pasangkan lembaga sosial dan fungsinya yang tepat!<br><table class='stimulus-table'><tr><th>Lembaga Sosial</th><th>Fungsi</th></tr><tr><td>(1) Keluarga</td><td>(A) Mengatur produksi, distribusi, dan konsumsi barang dan jasa</td></tr><tr><td>(2) Pendidikan</td><td>(B) Memberikan pedoman hidup spiritual dan moral</td></tr><tr><td>(3) Ekonomi</td><td>(C) Menyampaikan pengetahuan dan keterampilan</td></tr><tr><td>(4) Agama</td><td>(D) Pemenuhan kebutuhan biologis dan kasih sayang</td></tr></table>",
+    options: ["1A, 2D, 3A, dan 4B","1B, 2C, 3A, dan 4C","1D, 2C, 3A, dan 4B","1C, 2D, 3B, dan 4A"],
+    answer: 2
+  },
+  {
+    id: 15, type: "pg", section: "Sosial Budaya",
+    question: "Pengelompokan suku, asal daerah, dan budaya yang sesuai adalah ...<br><table class='stimulus-table'><tr><th>Suku</th><th>Asal Daerah</th><th>Budaya</th></tr><tr><td>A. Minangkabau</td><td>1. Lombok</td><td>a. Tarian perang tradisional</td></tr><tr><td>B. Dayak</td><td>2. Papua</td><td>b. Tarian Pakarena</td></tr><tr><td>C. Bugis</td><td>3. Kalimantan</td><td>c. Tarian Gantar</td></tr><tr><td>D. Asmat</td><td>4. Sulawesi Selatan</td><td>d. Tari Piring</td></tr><tr><td>E. Sasak</td><td>1. Sumatera Barat</td><td>e. Tarian Peresean</td></tr></table>",
+    options: ["(B), (1), dan (c)","(C), (4), dan (b)","(A), (3), dan (d)","(E), (5), dan (e)"],
+    answer: 1
+  },
+  {
+    id: 16, type: "pg", section: "Sosial Budaya",
+    question: "Perhatikan pernyataan berikut!<br>(1) Keluarga Inti (Nuclear Family) terdiri dari ayah, ibu, dan anak-anak. Ini adalah unit sosial terkecil dan paling mendasar<br>(2) Keluarga adalah tempat satu-satunya untuk kita mengetahui sesuatu yang baik dan yang buruk<br>(3) Keluarga Besar (Extended Family) meliputi kakek, nenek, paman, bibi, sepupu, dan kerabat lainnya<br>(4) Keluarga memberikan perlindungan fisik, emosional, dan ekonomi bagi anggotanya, terutama anak-anak<br>(5) Keluarga menjadi tempat berlangsungnya hukuman dengan kekerasan baik fisik maupun verbal<br><br>Pernyataan di atas yang paling tepat adalah ...",
+    options: ["(1), (2), dan (3)","(1), (3), dan (4)","(2), (4), dan (5)","(3), (4), dan (5)"],
+    answer: 1
+  },
+  {
+    id: 17, type: "pg", section: "Sosial Budaya",
+    question: "Perhatikan tabel berikut!<br><table class='stimulus-table'><tr><th>No</th><th>Pernyataan</th></tr><tr><td>1</td><td>Keluarga adalah lembaga utama untuk melanjutkan keturunan dan memastikan kelangsungan hidup masyarakat</td></tr><tr><td>2</td><td>Keluarga menjadi agen sosialisasi primer, tempat individu pertama kali belajar norma, nilai, kebiasaan, bahasa, dan peran sosial yang berlaku dalam masyarakat</td></tr><tr><td>3</td><td>Terjadinya perubahan perilaku dalam keluarga anak mengakibatkan keluarga mengalami kemiskinan dan keterbelakangan</td></tr><tr><td>4</td><td>Anak-anak mempelajari cara berinteraksi, memecahkan masalah, dan memahami dunia di sekitar mereka dari lingkungan keluarga</td></tr></table>Urutan benar (B) dan salah (S) berdasarkan tabel di atas adalah ...",
+    options: ["B-B-S-B","B-S-B-B","S-S-B-B","S-B-B-S"],
+    answer: 0
+  },
+  {
+    id: 18, type: "pg", section: "Sosial Budaya",
+    question: "Berdasarkan gambar Festival Pacu Jalur di Provinsi Riau, bertahannya tradisi pada Masyarakat Provinsi Riau ini adalah bentuk dari berfungsinya lembaga ...",
+    image: "https://upload.wikimedia.org/wikipedia/commons/thumb/5/5e/Pacu_Jalur_2.jpg/400px-Pacu_Jalur_2.jpg",
+    imageCaption: "Sumber: timesmedia.co.id — Festival Pacu Jalur, tradisi masyarakat Riau",
+    options: ["Pendidikan","Agama","Keluarga","Budaya"],
+    answer: 3
+  },
+  {
+    id: 19, type: "pg", section: "Nilai & Norma",
+    question: "Perhatikan cerita berikut! Pada saat ujian IPAS di SD, Rio merasa kesulitan dengan beberapa soal. Ia melirik ke meja Dini dan melihat sekilas jawabannya. Godaan untuk menyontek muncul, namun Rio teringat pesan ibunya tentang kejujuran dan janji pada diri sendiri untuk selalu berbuat benar. Rio mengalihkan pandangan, berusaha keras mengerjakan soal sendiri meskipun tak semua terjawab sempurna.<br><br>Nilai yang ditunjukkan oleh cerita di atas adalah ...",
+    options: ["Nilai Kebersihan","Nilai Kerjasama","Nilai Kesetiakawanan","Nilai Kejujuran"],
+    answer: 3
+  },
+  {
+    id: 20, type: "pg", section: "Nilai & Norma",
+    question: "Di lingkungan sekolah, Kamu diajarkan untuk mengucapkan salam kepada guru. Perilaku tersebut adalah mencerminkan ...",
+    options: [
+      "Norma tata krama di kelas yang melatih nilai disiplin dan nilai penghargaan terhadap orang lain",
+      "Norma kesopanan yang didasari oleh nilai penghormatan terhadap orang yang lebih tua dan memiliki kedudukan lebih tinggi (guru)",
+      "Norma kerja sama dan norma kejujuran, yang dilandasi oleh nilai tanggung jawab dan nilai keadilan",
+      "Norma kebersihan dan norma tanggung jawab sosial, yang didukung oleh nilai kebersihan dan nilai kepedulian terhadap lingkungan"
+    ],
+    answer: 1
+  },
+  {
+    id: 21, type: "pg", section: "ASEAN",
+    question: "Salah satu komite kerjasama bidang ekonomi organisasi ASEAN berkedudukan di Malaysia (Peninsular dan Sabah-Sarawak). Komite yang dimaksud adalah ...",
+    image: "https://upload.wikimedia.org/wikipedia/commons/thumb/6/66/Malaysia_on_the_globe_%28special_marker%29.svg/300px-Malaysia_on_the_globe_%28special_marker%29.svg.png",
+    imageCaption: "Sumber: suneducationgroup.com — Peta Malaysia",
+    options: [
+      "Committee on Transportation and Communication",
+      "Committee on Cultural and Information",
+      "Committee on Industry, Mining, and Energi",
+      "Committee on Finance and Banking"
+    ],
+    answer: 3
+  },
+  {
+    id: 22, type: "pg", section: "ASEAN",
+    question: "Perhatikan gambar hewan langka (Badak Bercula Satu) dan tabel berikut!<br><table class='stimulus-table'><tr><th>No</th><th>Pernyataan</th></tr><tr><td>1</td><td>Pelarangan perdagangan hewan langka ini merupakan bentuk embargo dari pemerintah</td></tr><tr><td>2</td><td>Pelarangan penyelundupan cula badak dapat menurunkan daya saing produk Indonesia</td></tr><tr><td>3</td><td>Taman Nasional Ujung Kulon menjadi tempat konservasi hewan langka tersebut</td></tr><tr><td>4</td><td>Pelarangan perdagangan hewan langka ini mendukung pembangunan berkelanjutan</td></tr></table>Urutan benar (B) dan salah (S) berdasarkan tabel di atas adalah ...",
+    options: ["S-S-B-B","S-S-B-B","B-S-B-S","B-B-S-S"],
+    answer: 0
+  },
+  {
+    id: 23, type: "pg", section: "Asia Tenggara",
+    question: "Bangunan berwarna emas dengan arsitektur agama Buddha tersebut menjadi destinasi wisata populer. Bangunan tersebut dikenal dengan nama ...",
+    image: "https://upload.wikimedia.org/wikipedia/commons/thumb/8/8b/Shwedagon_Pagoda_Composite.jpg/400px-Shwedagon_Pagoda_Composite.jpg",
+    imageCaption: "Sumber: vovworld.vn — Pagoda emas berarsitektur Buddha di Asia Tenggara",
+    options: ["Angkor Wat di Kamboja","Buu Long Temple di Vietnam","Wat Phra Kaew di Thailand","Pagoda Shwedagon di Myanmar"],
+    answer: 3
+  },
+  {
+    id: 24, type: "pg", section: "Ekonomi",
+    question: "Perhatikan pernyataan berikut!<br>1. Pak Maman memetik daun teh setiap pagi di kebun miliknya<br>2. Tengkulak membawa sayuran untuk dijual ke kota<br>3. Masyarakat adat menanam bibit padi di lahan tadah hujan<br>4. PT Sinar Manis mengolah tebu menjadi gula pasir<br>5. Kelapa sawit diolah menjadi margarin sebagai bahan pembuatan kue<br><br>Kegiatan produksi yang dilakukan masyarakat wilayah dataran rendah adalah ...",
+    options: ["(1), (3), dan (5)","(2), (3), dan (4)","(2), (3), dan (5)","(3), (4), dan (5)"],
+    answer: 3
+  },
+  {
+    id: 25, type: "pg", section: "Ekonomi",
+    question: "Festival Pacu Jalur merupakan pesta rakyat kebanggaan masyarakat Riau. Perahu kayu berhias ukiran khas Riau ini beradu kecepatan melintasi Sungai Kuantan. Pada mulanya, di awal abad 17, masyarakat desa Rantau Kuantan menjadikan perahu ini untuk mengangkut hasil bumi seperti pisang dan tebu.<br><br>Berdasarkan teks di atas, kegiatan ekonomi yang dilakukan masyarakat desa Rantau Kuantan adalah ...",
+    options: ["Produksi","Distribusi","Konsumsi","Investasi"],
+    answer: 1
+  },
+  {
+    id: 26, type: "pg", section: "Ekonomi",
+    question: "Negara A memiliki komoditas ekspor selain beras adalah karet dibanding negara ASEAN lainnya, bahkan beberapa negara melakukan impor karet ke negara tersebut. Negara A juga menghasilkan komoditas ekspor lainnya yaitu sukucadang kendaraan, namun hasilnya tidak sebagus negara B.<br><br>Pernyataan yang tepat tentang perdagangan internasional adalah ...",
+    options: [
+      "Negara A mengimpor karet dari Negara B",
+      "Negara B mengekspor beras ke Negara A",
+      "Negara A mengekspor sukucadang kendaraan ke Negara B",
+      "Negara A mengimpor sukucadang kendaraan dari Negara B"
+    ],
+    answer: 3
+  },
+  {
+    id: 27, type: "pg", section: "Ekonomi",
+    question: "Andi berkeinginan membeli barang keperluan sekolah. Namun Andi dihadapkan pada dua pilihan paket keperluan sekolah. Paket A harganya Rp.120.000 dengan jaminan 6 bulan jika terjadi kerusakan dan paket B harganya Rp.200.000 sebelum potongan harga 40% dengan jaminan 9 bulan jika terjadi kerusakan.<br><br>Keputusan untuk membeli keperluan sekolah yang tepat adalah ...",
+    options: [
+      "Paket A karena harganya lebih murah, walaupun waktu jaminannya lebih pendek",
+      "Paket B karena jaminannya lebih panjang walaupun harganya lebih mahal",
+      "Paket B karena harganya lebih murah dengan jaminan yang lebih panjang",
+      "Paket B, walaupun harganya sama namun jaminan kerusakan lebih lama"
+    ],
+    answer: 2
+  },
+  {
+    id: 28, type: "pg", section: "Ekonomi",
+    question: "Nabila disuruh ibunya pergi ke pasar untuk membeli berbagai kebutuhan, seperti sayur dan beras. Ia membayar dengan tunai, lalu menyimpan sebagian sisanya di celengan. Di rumah, ibunya mencatat pengeluaran dan sisa uang belanja untuk mengetahui berapa banyak uang yang masih tersedia.<br><br>Fungsi uang yang tepat berdasarkan narasi adalah sebagai ...",
+    options: [
+      "Alat tukar, penyimpan kekayaan, dan satuan hitung",
+      "Alat investasi dan tabungan, alat ukur, dan alat produksi",
+      "Alat penyimpan barang, alat simpan-pinjam, dan alat produksi",
+      "Alat pengganti barter, penyimpan kekayaan, dan alat pembiayaan"
+    ],
+    answer: 0
+  },
+  {
+    id: 29, type: "pg", section: "Ekonomi",
+    question: "Perusahaan Tempe melakukan uji coba menggunakan kombinasi tenaga kerja dan mesin untuk menghasilkan jumlah produksi yang maksimal dengan biaya paling murah. Kombinasi A menghasilkan 30 wadah percetakan dengan biaya Rp.2.000.000. Kombinasi B menghasilkan produksi 20 wadah percetakan dengan biaya Rp.1.500.000.<br><br>Kombinasi kegiatan produksi yang menguntungkan bagi pengusaha Tempa adalah ...",
+    options: [
+      "Kombinasi A karena biaya produksi per-wadah percetakkannya lebih murah dari kombinasi B",
+      "Kombinasi B karena biaya produksi per-wadah percetakkannya lebih murah dari kombinasi A",
+      "Kombinasi B karena biaya produksinya lebih murah walaupun jumlah produksinya hanya 20 wadah",
+      "Kombinasi B karena hanya menggunakan 1 mesin dengan lebih banyak tenaga kerja"
+    ],
+    answer: 0
+  },
+  {
+    id: 30, type: "pg", section: "Ekonomi",
+    question: "Bu Rahmi ingin membuka usaha jajanan di depan rumah dengan modal kurang lebih Rp.500.000. Untuk mengoptimalkan modal yang dimiliki, Bu Rahmi membuat daftar kebutuhan usahanya, kemudian membandingkan harga kebutuhan usahanya di beberapa toko.<br><br>Tindakan ekonomi yang menunjukkan penerapan prinsip ekonomi yang tepat berdasarkan cerita tersebut adalah ...",
+    options: [
+      "Memilih barang yang dibutuhkan dengan harga yang lebih murah",
+      "Membeli barang sebanyak-banyaknya agar usahanya cepat maju",
+      "Menambah modalnya agar dagangannya lebih banyak dan lengkap",
+      "Mengikuti tren pasar tanpa memperhitungkan biaya yang dikeluarkan"
+    ],
+    answer: 0
+  },
+  {
+    id: 31, type: "pg", section: "Sejarah",
+    question: "Berdasarkan pernyataan: <b>A:</b> Waruga adalah kubur batu yang berbentuk kubus atau bulat dan dibuat dari batu utuh. <b>B:</b> Waruga hanya ditemukan di Sawangan, Sulawesi Utara dan tidak ditemukan di daerah lainnya di Sulawesi.<br><br>Hubungan dua pernyataan yang tepat adalah ...",
+    options: [
+      "Pernyataan A benar, pernyataan B benar, dan ada hubungan",
+      "Pernyataan A benar, pernyataan B benar, tetapi tidak ada hubungan",
+      "Pernyataan A benar, pernyataan B salah",
+      "Pernyataan A salah, pernyataan B benar"
+    ],
+    answer: 2
+  },
+  {
+    id: 32, type: "pg", section: "Sejarah",
+    question: "Salah satu ciri kepercayaan animisme dalam masyarakat pra aksara adalah ...",
+    options: [
+      "Percaya bahwa terdapat roh yang mendiami sebuah pohon dan gunung",
+      "Mempercayai proses reinkarnasi seperti pada agama Hindu dan Buddha",
+      "Tidak memiliki kepercayaan bahwa benda-benda di bumi memiliki jiwa",
+      "Mengikuti konsep Hukum karma seperti dalam agama Buddha"
+    ],
+    answer: 0
+  },
+  {
+    id: 33, type: "pg", section: "Sejarah",
+    question: "Perhatikan pernyataan berikut tentang kerajaan Hindu Buddha dalam perdagangan di Asia Tenggara!<br>(1) Menguasai jalur perdagangan antara India dan Tiongkok dengan pengendalian Selat Malaka dan Selat Sunda di abad ke-8 hingga abad ke-11<br>(2) Memiliki berbagai komoditas yang kaya seperti kayu gaharu, cengkih, pala, emas, dan timah<br>(3) Melakukan ekspedisi militer untuk menaklukkan bandar pelabuhan pesaing di sekitar Asia Tenggara<br>(4) Mendapatkan restu dan perlindungan dari Kaisar Tiongkok untuk berdagang dengan Tiongkok<br><br>Pernyataan yang menggambarkan peran dan kekayaan kerajaan di atas adalah ...",
+    options: ["Majapahit","Sriwijaya","Kutai","Tarumanagara"],
+    answer: 1
+  },
+  {
+    id: 34, type: "pg", section: "Sejarah",
+    question: "Perhatikan gambar berikut! Candi tersebut adalah peninggalan dari dinasti ...",
+    image: "https://upload.wikimedia.org/wikipedia/commons/thumb/8/8c/Borobudur_ship.jpg/400px-Borobudur_ship.jpg",
+    imageCaption: "Sumber: 1001indonesia.net — Candi Borobudur, Magelang, Jawa Tengah",
+    options: ["Sanjaya","Syailendra","Sriwijaya","Drupada"],
+    answer: 1
+  },
+  {
+    id: 35, type: "pg", section: "Sejarah",
+    question: "Perhatikan gambar peta Aceh dan sekitarnya! Lokasi Kesultanan Islam pertama di Nusantara yang berdiri Abad ke-13 hingga abad ke-16 ditunjukkan oleh nomor ... (Nomor 4 = ujung paling utara Aceh)",
+    image: "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b9/Aceh-Locator.svg/300px-Aceh-Locator.svg.png",
+    imageCaption: "Sumber: vrogue.co — Peta Aceh (Angka 4 menunjuk ujung utara, lokasi Kesultanan Samudera Pasai)",
+    options: ["1","2","3","4"],
+    answer: 3
+  },
+  {
+    id: 36, type: "pg", section: "Sejarah",
+    question: "Berdasarkan pernyataan: <b>A:</b> Sunan Kalijaga adalah seorang ulama terkenal dan penasihat pemerintahan pada masa Majapahit, Demak, dan Pajang, serta menjadi anggota Walisongo. <b>B:</b> Sunan Kalijaga dikenal sebagai seniman dan arsitek yang mengajarkan Islam melalui wayang kulit, mengganti cerita Hindu dengan kisah ajaran Islam seperti Wayang Sadat dan Jamus Kalimasada.<br><br>Hubungan dua pernyataan yang tepat adalah ...",
+    options: [
+      "Pernyataan A benar, pernyataan B benar, dan ada hubungan",
+      "Pernyataan A benar, pernyataan B benar, tetapi tidak ada hubungan",
+      "Pernyataan A benar, pernyataan B salah",
+      "Pernyataan A salah, pernyataan B benar"
+    ],
+    answer: 0
+  },
+  {
+    id: 37, type: "pg", section: "Sejarah",
+    question: "Berdasarkan pernyataan: <b>A:</b> VOC adalah persekutuan dagang Belanda yang didirikan pada 20 Maret 1602, dan memiliki monopoli perdagangan di Asia dan Amerika. <b>B:</b> VOC memiliki hak-hak istimewa dari negara seperti memiliki tentara, mencetak mata uang, dan menyatakan perang.<br><br>Hubungan dua pernyataan yang tepat adalah ...",
+    options: [
+      "Pernyataan A benar, pernyataan B benar, dan ada hubungan",
+      "Pernyataan A benar, pernyataan B benar, tetapi tidak ada hubungan",
+      "Pernyataan A benar, pernyataan B salah",
+      "Pernyataan A salah, pernyataan B benar"
+    ],
+    answer: 0
+  },
+  {
+    id: 38, type: "pg", section: "Sejarah",
+    question: "Perhatikan pernyataan berikut!<br>(1) Raffles menghapus sistem perdagangan budak dan memperkenalkan otonomi terbatas di Jawa.<br>(2) Ia melakukan penelitian dan dokumentasi flora, fauna, serta peninggalan sejarah seperti Candi Borobudur dan Prambanan.<br>(3) Raffles diangkat menjadi Gubernur Sumatra tanpa ada dukungan dari pihak Inggris.<br>(4) Ia memimpin diplomasi dengan raja-raja Nusantara dengan tujuan mengakui kedaulatan pemerintah Inggris.<br><br>Urutan benar (B) dan salah (S) berdasarkan pernyataan di atas adalah ...",
+    options: ["B-B-S-B","B-S-B-B","S-S-B-B","S-B-B-S"],
+    answer: 0
+  },
+  {
+    id: 39, type: "pg", section: "Sejarah",
+    question: "Perhatikan gambar berikut! (Tokoh pahlawan perlawanan kolonialisme Belanda) Tokoh tersebut adalah kunci perlawanan terhadap kolonialisme Belanda dalam perang yang terjadi di ...",
+    image: "https://upload.wikimedia.org/wikipedia/commons/thumb/2/29/Teuku_Umar.jpg/300px-Teuku_Umar.jpg",
+    imageCaption: "Sumber: wawasansejarah.com — Tokoh pahlawan perlawanan Belanda",
+    options: ["Aceh","Maluku","Bali","Sulawesi"],
+    answer: 0
+  },
+  {
+    id: 40, type: "pg", section: "Sejarah",
+    question: "Perhatikan pernyataan berikut!<br>(1) Teuku Umar mulai berjuang melawan Belanda sejak umur 19 tahun di kampungnya dan Aceh Barat.<br>(2) Pada usia muda, Teuku Umar sudah diangkat menjadi Keuchik Gampong di Padang.<br>(3) Teuku Umar menikahi Nyak Sofiah dan Nyak Malighai, namun tidak menikahi Cut Nyak Dhien.<br>(4) Teuku Umar dan Cut Nyak Dhien bersama-sama melancarkan serangan terhadap pos-pos Belanda setelah menikah.<br><br>Urutan benar (B) dan salah (S) berdasarkan pernyataan di atas adalah ...",
+    options: ["S-S-B-B","B-S-B-B","B-S-S-B","S-B-B-S"],
+    answer: 2
+  }
+];
+
+let studentName = "";
+let studentClass = "";
+let answers = new Array(QUESTIONS.length).fill(null);
+let currentQ = 0;
+let timerInterval = null;
+let timeLeft = DURATION;
+let quizStarted = false;
+
+function startQuiz() {
+  const name = document.getElementById("inp-name").value.trim();
+  const cls = document.getElementById("inp-class").value;
+  if (!name) { alert("Silakan masukkan nama lengkap Anda!"); return; }
+  if (!cls) { alert("Silakan pilih kelas Anda!"); return; }
+  studentName = name;
+  studentClass = cls;
+  document.getElementById("student-label").textContent = `👤 ${studentName} — Kelas ${studentClass}`;
+  document.getElementById("screen-identity").classList.add("hidden");
+  document.getElementById("screen-quiz").classList.remove("hidden");
+  buildPalette();
+  renderQuestion();
+  startTimer();
+  quizStarted = true;
+}
+
+function startTimer() {
+  timeLeft = DURATION;
+  updateTimerDisplay();
+  timerInterval = setInterval(() => {
+    timeLeft--;
+    updateTimerDisplay();
+    if (timeLeft <= 0) {
+      clearInterval(timerInterval);
+      submitQuiz();
+    }
+  }, 1000);
+}
+
+function updateTimerDisplay() {
+  const m = Math.floor(timeLeft / 60).toString().padStart(2,"0");
+  const s = (timeLeft % 60).toString().padStart(2,"0");
+  document.getElementById("timer-display").textContent = `${m}:${s}`;
+  const box = document.getElementById("timer-box");
+  if (timeLeft <= 300) box.classList.add("warning");
+  else box.classList.remove("warning");
+}
+
+function buildPalette() {
+  const pal = document.getElementById("q-palette");
+  // remove old buttons
+  const existing = pal.querySelectorAll(".palette-btn");
+  existing.forEach(b => b.remove());
+  QUESTIONS.forEach((q, i) => {
+    const btn = document.createElement("button");
+    btn.className = "palette-btn" + (i === currentQ ? " current" : "") + (answers[i] !== null ? " answered" : "");
+    btn.textContent = i + 1;
+    btn.onclick = () => { currentQ = i; renderQuestion(); updatePalette(); };
+    pal.appendChild(btn);
+  });
+}
+
+function updatePalette() {
+  const btns = document.querySelectorAll(".palette-btn");
+  btns.forEach((btn, i) => {
+    btn.className = "palette-btn" + (i === currentQ ? " current" : "") + (answers[i] !== null ? " answered" : "");
+  });
+}
+
+function renderQuestion() {
+  const q = QUESTIONS[currentQ];
+  const card = document.getElementById("question-card");
+  const total = QUESTIONS.length;
+  document.getElementById("progress-bar").style.width = `${((currentQ+1)/total)*100}%`;
+  document.getElementById("q-counter").textContent = `${currentQ+1} / ${total}`;
+  document.getElementById("btn-next").textContent = currentQ === total - 1 ? "Selesai & Submit ✓" : "Selanjutnya →";
+
+  let html = `<div class="q-meta"><span class="q-num">No. ${q.id}</span><span class="q-section">📌 ${q.section}</span></div>`;
+  html += `<div class="q-text">${q.question}</div>`;
+  if (q.image) {
+    html += `<img src="${q.image}" class="q-image" alt="stimulus gambar soal ${q.id}" /><p style="font-size:0.75rem;color:var(--muted);margin-bottom:12px;">${q.imageCaption}</p>`;
+  }
+  html += `<div class="options">`;
+  const letters = ["A","B","C","D"];
+  q.options.forEach((opt, i) => {
+    const sel = answers[currentQ] === i;
+    html += `<button class="option-btn ${sel ? 'selected' : ''}" onclick="selectOption(${i})"><span class="opt-letter">${letters[i]}</span>${opt}</button>`;
+  });
+  html += `</div>`;
+  card.innerHTML = html;
+}
+
+function selectOption(idx) {
+  answers[currentQ] = idx;
+  renderQuestion();
+  updatePalette();
+}
+
+function prevQ() {
+  if (currentQ > 0) { currentQ--; renderQuestion(); updatePalette(); }
+}
+
+function nextOrSubmit() {
+  if (currentQ < QUESTIONS.length - 1) {
+    currentQ++;
+    renderQuestion();
+    updatePalette();
+  } else {
+    const unanswered = answers.filter(a => a === null).length;
+    if (unanswered > 0) {
+      if (!confirm(`Masih ada ${unanswered} soal yang belum dijawab. Yakin ingin submit?`)) return;
+    } else {
+      if (!confirm("Apakah Anda yakin ingin mengumpulkan jawaban?")) return;
+    }
+    submitQuiz();
+  }
+}
+
+function submitQuiz() {
+  clearInterval(timerInterval);
+  document.getElementById("screen-quiz").classList.add("hidden");
+  document.getElementById("screen-result").classList.remove("hidden");
+  showResult();
+}
+
+function showResult() {
+  let correct = 0, wrong = 0, skip = 0;
+  QUESTIONS.forEach((q, i) => {
+    if (answers[i] === null) skip++;
+    else if (answers[i] === q.answer) correct++;
+    else wrong++;
+  });
+  const score = Math.round((correct / QUESTIONS.length) * 100);
+  document.getElementById("score-num").textContent = score;
+  document.getElementById("score-ring").style.setProperty("--pct", `${score}%`);
+  document.getElementById("result-name").textContent = `${studentName} — Kelas ${studentClass}`;
+  document.getElementById("result-meta").textContent = `Benar: ${correct} | Salah: ${wrong} | Tidak Dijawab: ${skip}`;
+  document.getElementById("res-correct").textContent = correct;
+  document.getElementById("res-wrong").textContent = wrong;
+  document.getElementById("res-skip").textContent = skip;
+
+  let feedback = "";
+  if (score >= 90) feedback = "🏆 Luar biasa! Nilai kamu sangat tinggi. Kamu sangat siap menghadapi OSN IPS tingkat nasional. Terus pertahankan prestasi gemilang ini!";
+  else if (score >= 75) feedback = "🥈 Bagus sekali! Kamu menguasai sebagian besar materi dengan baik. Perkuat lagi bagian yang masih kurang dan kamu akan semakin siap!";
+  else if (score >= 60) feedback = "📘 Cukup baik! Kamu sudah memahami banyak materi, tapi masih perlu latihan lebih banyak di beberapa topik. Semangat belajar!";
+  else if (score >= 40) feedback = "📖 Kamu sudah berusaha! Tingkatkan pemahaman di materi Geografi, Sejarah, dan Ekonomi. Dengan latihan rutin, kamu pasti bisa meningkat!";
+  else feedback = "💪 Jangan menyerah! Mulai ulangi materi dari awal dan coba lagi. Setiap kali latihan, kamu semakin dekat menuju sukses OSN!";
+  document.getElementById("feedback-box").textContent = feedback;
+
+  // Review
+  const reviewList = document.getElementById("review-list");
+  reviewList.innerHTML = "";
+  const letters = ["A","B","C","D"];
+  QUESTIONS.forEach((q, i) => {
+    let cls = "rn", badge = "n", badgeText = "Tidak Dijawab";
+    if (answers[i] !== null) {
+      if (answers[i] === q.answer) { cls = "rc"; badge = "c"; badgeText = "✅ Benar"; }
+      else { cls = "rw"; badge = "w"; badgeText = "❌ Salah"; }
+    }
+    const div = document.createElement("div");
+    div.className = `review-item ${cls}`;
+    const yourAns = answers[i] !== null ? `Jawabanmu: ${letters[answers[i]]}` : "Tidak dijawab";
+    div.innerHTML = `<strong>No. ${i+1}</strong> <span class="r-badge ${badge}">${badgeText}</span><br><span style="color:var(--muted);font-size:0.83rem;">${yourAns} &nbsp;|&nbsp; Jawaban benar: ${letters[q.answer]}</span>`;
+    reviewList.appendChild(div);
+  });
+}
+
+function restartQuiz() {
+  answers = new Array(QUESTIONS.length).fill(null);
+  currentQ = 0;
+  timeLeft = DURATION;
+  document.getElementById("screen-result").classList.add("hidden");
+  document.getElementById("screen-identity").classList.remove("hidden");
+  document.getElementById("inp-name").value = "";
+  document.getElementById("inp-class").value = "";
+}
+</script>
+</body>
+</html>
